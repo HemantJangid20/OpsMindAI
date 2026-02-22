@@ -9,7 +9,9 @@ const app = express();
 app.use(express.json());
 
 app.use("/api/upload", require("./routes/upload"));
+app.use("/api/query", require("./routes/query"));
 
-app.listen(5000, () => {
-  console.log("Server running on port 5000");
+const PORT = 3001;
+app.listen(PORT, "127.0.0.1", () => {
+  console.log(`Server running on http://127.0.0.1:${PORT}`);
 });

@@ -3,6 +3,8 @@ const multer = require("multer");
 const parsePDF = require("../services/pdfParser");
 const chunkText = require("../utils/chunkText");
 const SopChunk = require("../models/SopChunk");
+const generateEmbedding = require("../services/embedding");
+
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
@@ -16,9 +18,11 @@ router.post("/", upload.single("file"), async (req, res) => {
     const fakeEmbedding = () => Array(384).fill(0);
 
     for (let chunk of chunks) {
+      const embedding = await generateEmbedding(chunk);
+    
       await SopChunk.create({
         text: chunk,
-        embedding: fakeEmbedding(),
+        embedding,
         source: {
           fileName: req.file.originalname,
         },
